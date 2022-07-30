@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:test="clr-namespace:MauiControlTemplateBug.Controls"
+             x:Class="MauiControlTemplateBug.MainPage">
+    <ContentPage.Resources>
+        <!--
+            BUG: This ControlTemplate does not get applied bythe Style below
+        -->
+        <ControlTemplate x:Key="AlternateTestControlTemplate">
+            <VerticalStackLayout>
+                <Label Text="This label is defined in MainPage.xaml in the ControlTemplate"/>
+                <ContentPresenter Content="{TemplateBinding Content}"/>
+            </VerticalStackLayout>
+        </ControlTemplate>
+
+
+        <!--
+            BUG: This Style fails to apply the ControlTemplate
+            Hypothesis: Because TestControl is a ContentView defined in its own namespace?
+        -->
+        <Style TargetType="test:TestControl">
+            <Setter Property="ControlTemplate" Value="{StaticResource AlternateTestControlTemplate}" />
+        </Style >
+
+        <ControlTemplate x:Key="AlternateRadioButtonControlTemplate">
+            <VerticalStackLayout>
+                <Label Text="RadioButton ControlTemplate replaced in MainPage.xaml by a Style"/>
+                <ContentPresenter Content="{TemplateBinding Content}"/>
+            </VerticalStackLayout>
+        </ControlTemplate>
+
+        <Style TargetType="RadioButton">
+            <Setter Property="ControlTemplate" Value="{StaticResource AlternateRadioButtonControlTemplate}" />
+        </Style >
+
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <Label Text="BUG: The TestControl below ought to contain a Label defined in MainPage.xaml. If it is reporting it is defined in TestControl.xaml, we have a bug!"/>
+
+            <Border>
+                <test:TestControl>
+                    <Label Text="Welcome to .NET MAUI!" HorizontalOptions="Center" />
+                </test:TestControl>
+            </Border>
+
+            <Label Text="Below is a RadioButton that has its ControlTemplate correctly replaced, using the same process as the TestControl above."/>
+
+            <Border>
+                <RadioButton />
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
