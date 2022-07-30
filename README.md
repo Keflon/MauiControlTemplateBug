@@ -1,4 +1,5 @@
 # MauiControlTemplateBug
+## Bug number [#9088](https://github.com/dotnet/maui/issues/9088)
 
 Replacing a `ControlTemplate` on a custom-control using a `Style` fails to apply the `ControlTemplate`.  
 
